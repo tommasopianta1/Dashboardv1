@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cruscotto I Bùgianèn 2026</title>
+<script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
+<script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#FAF8F5; font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif; color:#2C2419; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useMemo } = React;
+const { ComposedChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, ReferenceArea, Cell, PieChart, Pie, LabelList } = Recharts;
+
+import {
+  ComposedChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
+  ResponsiveContainer, ReferenceLine, ReferenceArea, Cell, LabelList,
+  PieChart, Pie
+} from "recharts";
+
+// ═══════════════════════════════════════════════════════════════
+// DATA — this single line gets replaced by build.py
+// ═══════════════════════════════════════════════════════════════
+const D = {"meta": {"complete": ["Gen", "Feb"], "generated": "2026-03-23T16:04:15.080604"}, "targets": {"fatturato": 1873000, "ebitda_pct": 20, "cogs_pct": 30, "google_reviews": 4.8, "vino_pct": 20}, "pl26": [{"mese": "Gen", "ricavi": 117223.18, "budget_ricavi": 112261.57, "corrispettivi": 100678.32, "fatture": 8796.36, "ricavi_extra": 7748.5, "vino_gest": 24773.59, "totale_gestionale": 127992.74, "costi_variabili": -39548.08, "cogs": -36944.66, "costo_pos": -1294.82, "lavanderia": -1308.6, "costi_fissi": -19222.74, "acquisti_op": -4182.98, "utenze": -3546.44, "immondizia": 0.0, "manutenzioni": -957.05, "servizi": -1443.71, "software": -317.03, "costi_bancari": -199.35, "stipendio_amm": -5915.29, "consulenze": -957.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": -1502.0, "personale": -45785.35, "salari": -31207.65, "oneri_inps": -7916.56, "tfr": -2137.14, "fuori_busta": -4524.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 14163.01, "ammortamenti": -5000.0, "interessi": -1865.45, "utile_ante": 7297.56, "pct_cogs": 31.52, "pct_personale": 39.06, "pct_ebitda": 12.08, "pct_food_cost": 27.36, "vino_pct": 19.21, "break_even": 94925.0, "surplus": 22298.0}, {"mese": "Feb", "ricavi": 58201.14, "budget_ricavi": 70346.68, "corrispettivi": 45157.82, "fatture": 4306.82, "ricavi_extra": 8736.5, "vino_gest": 12954.18, "totale_gestionale": 63384.09, "costi_variabili": -24496.76, "cogs": -23173.09, "costo_pos": -783.07, "lavanderia": -540.6, "costi_fissi": -14328.83, "acquisti_op": -1932.81, "utenze": -2896.96, "immondizia": 0.0, "manutenzioni": -1963.75, "servizi": -193.71, "software": -317.03, "costi_bancari": -54.13, "stipendio_amm": -5911.54, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": -32671.09, "salari": -22153.53, "oneri_inps": -5799.07, "tfr": -2118.49, "fuori_busta": -2600.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": -8059.54, "ammortamenti": -5000.0, "interessi": -1856.55, "utile_ante": -14916.09, "pct_cogs": 39.82, "pct_personale": 56.13, "pct_ebitda": -13.85, "pct_food_cost": 28.3, "vino_pct": 20.23, "break_even": 78093.0, "surplus": -19892.0}, {"mese": "Mar", "ricavi": 66210.5, "budget_ricavi": 111302.78, "corrispettivi": 57368.64, "fatture": 8488.36, "ricavi_extra": 353.5, "vino_gest": 37727.77, "totale_gestionale": 191376.83, "costi_variabili": -66408.37, "cogs": -65914.78, "costo_pos": -493.59, "lavanderia": 0.0, "costi_fissi": -3046.11, "acquisti_op": -112.82, "utenze": -980.72, "immondizia": 0.0, "manutenzioni": -211.25, "servizi": -193.71, "software": -317.03, "costi_bancari": -50.19, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": -121.5, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1668.81, "utile_ante": 0, "pct_cogs": 99.55, "pct_personale": 0.0, "pct_ebitda": 0, "pct_food_cost": 1.26, "vino_pct": 51.8, "break_even": 682012.0, "surplus": -615801.0}, {"mese": "Apr", "ricavi": 0.0, "budget_ricavi": 149358.35, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -60613.91, "cogs": -60613.91, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1838.64, "utile_ante": 0, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}, {"mese": "Mag", "ricavi": 0.0, "budget_ricavi": 169858.03, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -57504.0, "cogs": -57504.0, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1770.62, "utile_ante": 0, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}, {"mese": "Giu", "ricavi": 0.0, "budget_ricavi": 148349.53, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -57504.0, "cogs": -57504.0, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1820.61, "utile_ante": 0, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}, {"mese": "Lug", "ricavi": 0.0, "budget_ricavi": 159777.16, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -57504.0, "cogs": -57504.0, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1753.11, "utile_ante": 0, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}, {"mese": "Ago", "ricavi": 0.0, "budget_ricavi": 161076.07, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -57504.0, "cogs": -57504.0, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1802.45, "utile_ante": 0, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}, {"mese": "Set", "ricavi": 0.0, "budget_ricavi": 142364.19, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -57504.0, "cogs": -57504.0, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1793.32, "utile_ante": 0, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}, {"mese": "Ott", "ricavi": 0.0, "budget_ricavi": 176966.05, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -57504.0, "cogs": -57504.0, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1726.6, "utile_ante": 0, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}, {"mese": "Nov", "ricavi": 0.0, "budget_ricavi": 181961.74, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -57504.0, "cogs": -57504.0, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1774.95, "utile_ante": 0, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}, {"mese": "Dic", "ricavi": 0.0, "budget_ricavi": 189105.11, "corrispettivi": 0.0, "fatture": 0.0, "ricavi_extra": 0.0, "vino_gest": 0, "totale_gestionale": 0, "costi_variabili": -57504.0, "cogs": -57504.0, "costo_pos": 0.0, "lavanderia": 0.0, "costi_fissi": -1730.88, "acquisti_op": 0.0, "utenze": 0.0, "immondizia": 0.0, "manutenzioni": -161.25, "servizi": -193.71, "software": -317.03, "costi_bancari": 0.0, "stipendio_amm": 0.0, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": 0.0, "salari": 0.0, "oneri_inps": 0.0, "tfr": 0.0, "fuori_busta": 0.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 0, "ammortamenti": -5000.0, "interessi": -1708.76, "utile_ante": -6708.76, "pct_cogs": 0, "pct_personale": 0, "pct_ebitda": 0, "pct_food_cost": 0, "vino_pct": 0, "break_even": 0, "surplus": 0}], "pl25": [{"mese": "Gen", "ricavi": 109158.96, "budget_ricavi": 0, "corrispettivi": 96638.97, "fatture": 7312.09, "ricavi_extra": 5207.9, "vino_gest": 22172.37, "totale_gestionale": 121144.04, "costi_variabili": -34790.65, "cogs": -32628.3, "costo_pos": -1104.85, "lavanderia": -1057.5, "costi_fissi": -24145.99, "acquisti_op": -2802.83, "utenze": -4310.85, "immondizia": -390.35, "manutenzioni": -1963.16, "servizi": -1744.92, "software": -964.18, "costi_bancari": -459.41, "stipendio_amm": -5761.92, "consulenze": -4789.43, "advertising": -83.43, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": 0.0, "personale": -36939.48, "salari": -24270.55, "oneri_inps": -5974.3, "tfr": -1644.63, "fuori_busta": -5020.0, "bonus_vendita": -30.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 8733.02, "ammortamenti": -4500.0, "interessi": -1969.79, "utile_ante": 2263.23, "pct_cogs": 29.89, "pct_personale": 33.84, "pct_ebitda": 8.0, "pct_food_cost": 23.69, "vino_pct": 18.47}, {"mese": "Feb", "ricavi": 55880.49, "budget_ricavi": 0, "corrispettivi": 48771.0, "fatture": 3601.09, "ricavi_extra": 3508.4, "vino_gest": 10710.39, "totale_gestionale": 60832.11, "costi_variabili": -25025.79, "cogs": -23696.35, "costo_pos": -859.94, "lavanderia": -469.5, "costi_fissi": -21246.11, "acquisti_op": -3325.73, "utenze": -1920.55, "immondizia": -390.35, "manutenzioni": -2834.16, "servizi": -494.92, "software": -964.18, "costi_bancari": -52.98, "stipendio_amm": -5780.32, "consulenze": -4389.43, "advertising": -83.43, "donazioni": 0.0, "pasti_trasporti": -134.55, "assicurazione": -875.51, "affitto": 0.0, "personale": -27158.16, "salari": -17040.5, "oneri_inps": -4688.13, "tfr": -1523.53, "fuori_busta": -3876.0, "bonus_vendita": -30.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": -16611.4, "ammortamenti": -4500.0, "interessi": -1961.27, "utile_ante": -23072.67, "pct_cogs": 42.41, "pct_personale": 48.6, "pct_ebitda": -29.73, "pct_food_cost": 42.79, "vino_pct": 17.42}, {"mese": "Mar", "ricavi": 131825.15, "budget_ricavi": 0, "corrispettivi": 117703.79, "fatture": 8341.36, "ricavi_extra": 5780.0, "vino_gest": 25149.79, "totale_gestionale": 143995.67, "costi_variabili": -37394.63, "cogs": -35910.81, "costo_pos": -449.72, "lavanderia": -1034.1, "costi_fissi": -22103.05, "acquisti_op": -3105.39, "utenze": -2797.07, "immondizia": -390.35, "manutenzioni": -2856.91, "servizi": -494.92, "software": -964.18, "costi_bancari": -153.1, "stipendio_amm": -5782.0, "consulenze": -4389.43, "advertising": -83.43, "donazioni": 0.0, "pasti_trasporti": -210.76, "assicurazione": -875.51, "affitto": 0.0, "personale": -38485.0, "salari": -24715.02, "oneri_inps": -6345.67, "tfr": -1550.31, "fuori_busta": -5844.0, "bonus_vendita": -30.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 33804.65, "ammortamenti": -4500.0, "interessi": -1763.74, "utile_ante": 27540.91, "pct_cogs": 27.24, "pct_personale": 29.19, "pct_ebitda": 25.64, "pct_food_cost": 23.89, "vino_pct": 17.34}, {"mese": "Apr", "ricavi": 139339.72, "budget_ricavi": 0, "corrispettivi": 121688.74, "fatture": 7748.68, "ricavi_extra": 9902.3, "vino_gest": 26954.16, "totale_gestionale": 152287.63, "costi_variabili": -46790.1, "cogs": -44558.23, "costo_pos": -1087.67, "lavanderia": -1144.2, "costi_fissi": -21495.31, "acquisti_op": -2580.11, "utenze": -3426.22, "immondizia": -390.35, "manutenzioni": -1933.16, "servizi": -869.92, "software": -964.18, "costi_bancari": -197.6, "stipendio_amm": -5785.4, "consulenze": -4389.43, "advertising": -83.43, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": 0.0, "personale": -39446.69, "salari": -24230.22, "oneri_inps": -6738.9, "tfr": -1462.57, "fuori_busta": -6935.0, "bonus_vendita": -80.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 31527.79, "ammortamenti": -4500.0, "interessi": -1944.13, "utile_ante": 25083.66, "pct_cogs": 31.98, "pct_personale": 28.31, "pct_ebitda": 22.63, "pct_food_cost": 30.93, "vino_pct": 17.59}, {"mese": "Mag", "ricavi": 164137.13, "budget_ricavi": 0, "corrispettivi": 147016.96, "fatture": 7411.36, "ricavi_extra": 9708.8, "vino_gest": 33322.2, "totale_gestionale": 179702.47, "costi_variabili": -47432.07, "cogs": -45197.14, "costo_pos": -1023.83, "lavanderia": -1211.1, "costi_fissi": -23192.48, "acquisti_op": -4873.91, "utenze": -2593.68, "immondizia": -390.35, "manutenzioni": -2677.16, "servizi": -494.92, "software": -964.18, "costi_bancari": -68.43, "stipendio_amm": -5781.48, "consulenze": -4389.43, "advertising": -83.43, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": 0.0, "personale": -42339.3, "salari": -25820.44, "oneri_inps": -7210.02, "tfr": -1505.84, "fuori_busta": -7363.0, "bonus_vendita": -440.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 51454.45, "ammortamenti": -4500.0, "interessi": -1873.08, "utile_ante": 45081.37, "pct_cogs": 27.54, "pct_personale": 25.8, "pct_ebitda": 31.35, "pct_food_cost": 24.44, "vino_pct": 18.46}, {"mese": "Giu", "ricavi": 136414.81, "budget_ricavi": 0, "corrispettivi": 121350.33, "fatture": 7059.68, "ricavi_extra": 8004.8, "vino_gest": 27724.88, "totale_gestionale": 149616.41, "costi_variabili": -45542.33, "cogs": -43118.32, "costo_pos": -1323.61, "lavanderia": -1100.4, "costi_fissi": -22283.11, "acquisti_op": -2977.42, "utenze": -4046.82, "immondizia": -390.35, "manutenzioni": -2034.36, "servizi": -494.92, "software": -964.18, "costi_bancari": -51.92, "stipendio_amm": -5974.77, "consulenze": -4389.43, "advertising": -83.43, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": 0.0, "personale": -50595.63, "salari": -30873.09, "oneri_inps": -8954.39, "tfr": -2028.15, "fuori_busta": -8730.0, "bonus_vendita": -10.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 18836.91, "ammortamenti": -4500.0, "interessi": -1926.87, "utile_ante": 12410.04, "pct_cogs": 31.61, "pct_personale": 37.09, "pct_ebitda": 13.81, "pct_food_cost": 26.05, "vino_pct": 18.48}, {"mese": "Lug", "ricavi": 151639.8, "budget_ricavi": 0, "corrispettivi": 133282.66, "fatture": 12144.14, "ricavi_extra": 6213.0, "vino_gest": 32896.73, "totale_gestionale": 165995.85, "costi_variabili": -50188.81, "cogs": -47506.18, "costo_pos": -1429.53, "lavanderia": -1253.1, "costi_fissi": -20933.64, "acquisti_op": -2591.53, "utenze": -2926.7, "immondizia": -390.35, "manutenzioni": -1723.16, "servizi": -494.92, "software": -964.18, "costi_bancari": -213.71, "stipendio_amm": -5976.33, "consulenze": -4389.43, "advertising": -387.82, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": 0.0, "personale": -43735.04, "salari": -25653.05, "oneri_inps": -7204.7, "tfr": -1682.29, "fuori_busta": -9125.0, "bonus_vendita": -70.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 37022.48, "ammortamenti": -4500.0, "interessi": -1856.31, "utile_ante": 30666.17, "pct_cogs": 31.33, "pct_personale": 28.84, "pct_ebitda": 24.41, "pct_food_cost": 28.17, "vino_pct": 19.72}, {"mese": "Ago", "ricavi": 154762.13, "budget_ricavi": 0, "corrispettivi": 143313.64, "fatture": 4139.09, "ricavi_extra": 7309.4, "vino_gest": 32186.2, "totale_gestionale": 169439.64, "costi_variabili": -53130.92, "cogs": -50189.5, "costo_pos": -1261.02, "lavanderia": -1680.4, "costi_fissi": -21792.17, "acquisti_op": -1923.05, "utenze": -2811.01, "immondizia": -390.35, "manutenzioni": -1723.16, "servizi": -494.92, "software": -964.18, "costi_bancari": -63.08, "stipendio_amm": -5978.28, "consulenze": -4389.43, "advertising": -2179.2, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": 0.0, "personale": -40274.92, "salari": -27117.99, "oneri_inps": -1304.19, "tfr": -1931.24, "fuori_busta": -9811.5, "bonus_vendita": -110.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 36010.29, "ammortamenti": -4500.0, "interessi": -1909.48, "utile_ante": 29600.81, "pct_cogs": 32.43, "pct_personale": 26.02, "pct_ebitda": 23.27, "pct_food_cost": 25.59, "vino_pct": 18.91}, {"mese": "Set", "ricavi": 137631.89, "budget_ricavi": 0, "corrispettivi": 113782.62, "fatture": 8513.27, "ricavi_extra": 15336.0, "vino_gest": 28030.4, "totale_gestionale": 149931.38, "costi_variabili": -41335.94, "cogs": -39147.79, "costo_pos": -1300.45, "lavanderia": -887.7, "costi_fissi": -25254.2, "acquisti_op": -3221.42, "utenze": -2414.57, "immondizia": -390.35, "manutenzioni": -2568.26, "servizi": -494.92, "software": -964.18, "costi_bancari": -106.75, "stipendio_amm": -5978.28, "consulenze": -4389.43, "advertising": -3850.53, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": 0.0, "personale": -41714.27, "salari": -25516.2, "oneri_inps": -6559.97, "tfr": -1822.1, "fuori_busta": -7796.0, "bonus_vendita": -20.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 37666.65, "ammortamenti": -4500.0, "interessi": -1900.74, "utile_ante": 31265.91, "pct_cogs": 28.44, "pct_personale": 30.31, "pct_ebitda": 27.37, "pct_food_cost": 35.36, "vino_pct": 18.51}, {"mese": "Ott", "ricavi": 166916.49, "budget_ricavi": 0, "corrispettivi": 139625.42, "fatture": 15191.95, "ricavi_extra": 12099.12, "vino_gest": 32434.1, "totale_gestionale": 182731.63, "costi_variabili": -61330.71, "cogs": -58663.94, "costo_pos": -1214.77, "lavanderia": -1452.0, "costi_fissi": -21619.81, "acquisti_op": -2883.21, "utenze": -2607.81, "immondizia": -390.35, "manutenzioni": -2402.66, "servizi": -494.92, "software": -964.18, "costi_bancari": -216.65, "stipendio_amm": -5978.04, "consulenze": -4389.43, "advertising": -417.05, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": 0.0, "personale": -48468.04, "salari": -29837.56, "oneri_inps": -8006.76, "tfr": -2062.72, "fuori_busta": -7536.0, "bonus_vendita": -1025.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 33699.11, "ammortamenti": -4500.0, "interessi": -1830.93, "utile_ante": 27368.18, "pct_cogs": 35.15, "pct_personale": 29.04, "pct_ebitda": 20.19, "pct_food_cost": 26.65, "vino_pct": 17.66}, {"mese": "Nov", "ricavi": 187373.25, "budget_ricavi": 0, "corrispettivi": 154145.94, "fatture": 12866.36, "ricavi_extra": 20360.95, "vino_gest": 35086.53, "totale_gestionale": 203918.48, "costi_variabili": -76033.1, "cogs": -73273.36, "costo_pos": -1186.24, "lavanderia": -1573.5, "costi_fissi": -24095.77, "acquisti_op": -2523.07, "utenze": -2934.95, "immondizia": -390.35, "manutenzioni": -2629.59, "servizi": -494.92, "software": -964.18, "costi_bancari": -76.33, "stipendio_amm": -5976.33, "consulenze": -4389.43, "advertising": -1055.45, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -875.51, "affitto": -1785.66, "personale": -47614.18, "salari": -30956.91, "oneri_inps": -7171.07, "tfr": -1981.2, "fuori_busta": -7255.0, "bonus_vendita": -250.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 39481.37, "ammortamenti": -4500.0, "interessi": -1883.16, "utile_ante": 33098.21, "pct_cogs": 39.11, "pct_personale": 25.41, "pct_ebitda": 21.07, "pct_food_cost": 34.04, "vino_pct": 17.02}, {"mese": "Dic", "ricavi": 162383.33, "budget_ricavi": 0, "corrispettivi": 130388.32, "fatture": 19347.55, "ricavi_extra": 12647.47, "vino_gest": 32068.88, "totale_gestionale": 177763.36, "costi_variabili": -58726.63, "cogs": -56535.18, "costo_pos": -1245.55, "lavanderia": -945.9, "costi_fissi": -27041.05, "acquisti_op": -2831.5, "utenze": -3487.94, "immondizia": -390.35, "manutenzioni": -2031.66, "servizi": -594.92, "software": -964.18, "costi_bancari": -119.75, "stipendio_amm": -6077.71, "consulenze": -4389.43, "advertising": -105.37, "donazioni": -3900.0, "pasti_trasporti": -1272.73, "assicurazione": -875.51, "affitto": 0.0, "personale": -56439.32, "salari": -36607.73, "oneri_inps": -10369.67, "tfr": -2467.92, "fuori_busta": -6994.0, "bonus_vendita": 0.0, "rimanenze": -57560.0, "tasse_tributi": -222.82, "ebitda": 16973.51, "ammortamenti": -4500.0, "interessi": -1813.86, "utile_ante": 10659.65, "pct_cogs": 34.82, "pct_personale": 34.76, "pct_ebitda": 10.45, "pct_food_cost": 26.74, "vino_pct": 17.95}], "ratei": {"software": -964.18, "servizi": -612.14, "consulenze": -4422.76, "assicurazione": -875.51, "formazione": 0.0, "advertising": -708.0, "manutenzioni": -2281.45, "tasse_tributi": -222.82, "acquisti_op": -2469.9}, "ratei_deltas": {"Gen": -4497.09, "Feb": -7090.56}, "hr": {"Gen": [{"nome": "Sinagori Fabio", "ruolo": "Barista", "area": "Sala", "costo": 2517.57, "ore": 143.0}, {"nome": "Murati Esmeralda", "ruolo": "Manager", "area": "Management", "costo": 2227.71, "ore": 130.0}, {"nome": "Tortora Giada", "ruolo": "Cameriere", "area": "Sala", "costo": 2517.08, "ore": 144.0}, {"nome": "Pianta Tommaso", "ruolo": "Amministratore", "area": "Amministrazione", "costo": 2915.7, "ore": 0.0}, {"nome": "Beltracchini Fabio", "ruolo": "Amministratore", "area": "Amministrazione", "costo": 2999.59, "ore": 0.0}, {"nome": "Pinedo Salazar Luis Enrique", "ruolo": "Capo partita", "area": "Cucina", "costo": 2883.24, "ore": 168.0}, {"nome": "Piras Luca", "ruolo": "Executive Chef", "area": "Cucina", "costo": 2815.54, "ore": 156.0}, {"nome": "Ferreri Alessio", "ruolo": "Primo Cuoco", "area": "Cucina", "costo": 2592.66, "ore": 157.0}, {"nome": "Qadeer Abdul", "ruolo": "Lavapiatti", "area": "Cucina", "costo": 1972.88, "ore": 176.0}, {"nome": "Raviola Vittorio", "ruolo": "Dir. Sala", "area": "Sala", "costo": 2534.01, "ore": 133.0}, {"nome": "Giacomobello Gaia", "ruolo": "Cameriere", "area": "Sala", "costo": 675.93, "ore": 44.0}, {"nome": "Gai Marta", "ruolo": "Cameriere", "area": "Sala", "costo": 440.63, "ore": 29.0}, {"nome": "Frassetto Serena", "ruolo": "Cameriere", "area": "Sala", "costo": 1159.81, "ore": 80.0}, {"nome": "Bedon Naomi", "ruolo": "Chef de rang", "area": "Sala", "costo": 2001.73, "ore": 130.0}, {"nome": "Serra Giulia", "ruolo": "Cameriere", "area": "Sala", "costo": 1570.61, "ore": 105.0}, {"nome": "Berardi Chiara", "ruolo": "Chef de rang", "area": "Sala", "costo": 3136.52, "ore": 160.0}, {"nome": "Giardullo Davide", "ruolo": "Cameriere", "area": "Sala", "costo": 460.63, "ore": 30.0}, {"nome": "Santini Alice Maria", "ruolo": "Cameriere", "area": "Sala", "costo": 618.39, "ore": 41.0}, {"nome": "Nela Denise", "ruolo": "Chef de rang", "area": "Sala", "costo": 2883.34, "ore": 168.0}, {"nome": "Petito Gabriele", "ruolo": "Chef de rang", "area": "Sala", "costo": 3021.1, "ore": 173.5}, {"nome": "Omonoyan Jordan", "ruolo": "Capo partita", "area": "Cucina", "costo": 2235.74, "ore": 178.0}, {"nome": "Schillaci Matilda", "ruolo": "Cameriere", "area": "Sala", "costo": 616.66, "ore": 40.0}, {"nome": "Schellino Francesco", "ruolo": "Cameriere", "area": "Cucina", "costo": 653.59, "ore": 35.0}], "Feb": [{"nome": "Sinagori Fabio", "ruolo": "Barista", "area": "Sala", "costo": 1837.79, "ore": 49.0}, {"nome": "Murati Esmeralda", "ruolo": "Manager", "area": "Management", "costo": 1545.11, "ore": 65.0}, {"nome": "Tortora Giada", "ruolo": "Cameriere", "area": "Sala", "costo": 1895.31, "ore": 78.0}, {"nome": "Pianta Tommaso", "ruolo": "Amministratore", "area": "Amministrazione", "costo": 2912.92, "ore": 0.0}, {"nome": "Beltracchini Fabio", "ruolo": "Amministratore", "area": "Amministrazione", "costo": 2998.62, "ore": 0.0}, {"nome": "Pinedo Salazar Luis Enrique", "ruolo": "Capo partita", "area": "Cucina", "costo": 2184.38, "ore": 88.0}, {"nome": "Piras Luca", "ruolo": "Executive Chef", "area": "Cucina", "costo": 2202.05, "ore": 91.0}, {"nome": "Ferreri Alessio", "ruolo": "Primo Cuoco", "area": "Cucina", "costo": 1501.14, "ore": 41.0}, {"nome": "Qadeer Abdul", "ruolo": "Lavapiatti", "area": "Cucina", "costo": 1428.82, "ore": 88.0}, {"nome": "Raviola Vittorio", "ruolo": "Dir. Sala", "area": "Sala", "costo": 2055.98, "ore": 75.0}, {"nome": "Giacomobello Gaia", "ruolo": "Cameriere", "area": "Sala", "costo": 309.45, "ore": 20.0}, {"nome": "Gai Marta", "ruolo": "Cameriere", "area": "Sala", "costo": 13.38, "ore": 0.0}, {"nome": "Frassetto Serena", "ruolo": "Cameriere", "area": "Sala", "costo": 950.67, "ore": 38.0}, {"nome": "Bedon Naomi", "ruolo": "Chef de rang", "area": "Sala", "costo": 1779.48, "ore": 80.0}, {"nome": "Serra Giulia", "ruolo": "Cameriere", "area": "Sala", "costo": 1243.11, "ore": 55.0}, {"nome": "Berardi Chiara", "ruolo": "Chef de rang", "area": "Sala", "costo": 2137.62, "ore": 80.0}, {"nome": "Giardullo Davide", "ruolo": "Cameriere", "area": "Sala", "costo": 308.35, "ore": 20.0}, {"nome": "Santini Alice Maria", "ruolo": "Cameriere", "area": "Sala", "costo": 455.49, "ore": 30.0}, {"nome": "Nela Denise", "ruolo": "Chef de rang", "area": "Sala", "costo": 2144.69, "ore": 88.0}, {"nome": "Petito Gabriele", "ruolo": "Chef de rang", "area": "Sala", "costo": 2145.04, "ore": 87.0}, {"nome": "Omonoyan Jordan", "ruolo": "Capo partita", "area": "Cucina", "costo": 1637.86, "ore": 85.0}, {"nome": "Schillaci Matilda", "ruolo": "Cameriere", "area": "Sala", "costo": 42.95, "ore": 2.0}, {"nome": "Schellino Francesco", "ruolo": "Cameriere", "area": "Cucina", "costo": 13.22, "ore": 0.0}]}, "budget_pers": 38512.0, "chiamate": {"Gen": 3170.0, "Feb": 1127.0, "Mar": 4438.0, "Apr": 6058.0, "Mag": 8030.0, "Giu": 8030.0, "Lug": 8382.0, "Ago": 8734.0, "Set": 8382.0, "Ott": 7607.0, "Nov": 6903.0, "Dic": 6903.0}, "area_costs": {"Sala": 41474.0, "Management": 3773.0, "Amministrazione": 11828.0, "Cucina": 22122.0}, "trend25": [{"nps": 9.47, "cucina": 4.72, "servizio": 4.84, "n": 95, "google": 4.92, "tornerebbe": 97.9, "ritmo_giusto": 98.9, "prima_volta": 77.9, "lento": 1.1, "mese": "Gen"}, {"nps": 9.51, "cucina": 4.67, "servizio": 4.87, "n": 63, "google": 4.81, "tornerebbe": 100.0, "ritmo_giusto": 93.7, "prima_volta": 71.4, "lento": 3.2, "mese": "Feb"}, {"nps": 9.46, "cucina": 4.74, "servizio": 4.77, "n": 114, "google": 4.95, "tornerebbe": 96.5, "ritmo_giusto": 93.9, "prima_volta": 71.9, "lento": 3.5, "mese": "Mar"}, {"nps": 9.56, "cucina": 4.75, "servizio": 4.89, "n": 117, "google": 4.91, "tornerebbe": 99.1, "ritmo_giusto": 94.0, "prima_volta": 65.8, "lento": 3.4, "mese": "Apr"}, {"nps": 9.44, "cucina": 4.64, "servizio": 4.81, "n": 140, "google": 4.85, "tornerebbe": 96.4, "ritmo_giusto": 95.0, "prima_volta": 71.4, "lento": 4.3, "mese": "Mag"}, {"nps": 9.47, "cucina": 4.67, "servizio": 4.84, "n": 94, "google": 4.73, "tornerebbe": 100.0, "ritmo_giusto": 95.7, "prima_volta": 68.1, "lento": 1.1, "mese": "Giu"}, {"nps": 9.57, "cucina": 4.63, "servizio": 4.76, "n": 70, "google": 4.82, "tornerebbe": 98.6, "ritmo_giusto": 91.4, "prima_volta": 60.0, "lento": 5.7, "mese": "Lug"}, {"nps": 9.04, "cucina": 4.56, "servizio": 4.73, "n": 144, "google": 4.72, "tornerebbe": 93.1, "ritmo_giusto": 86.1, "prima_volta": 73.6, "lento": 11.8, "mese": "Ago"}, {"nps": 9.31, "cucina": 4.79, "servizio": 4.77, "n": 108, "google": 4.69, "tornerebbe": 97.2, "ritmo_giusto": 88.9, "prima_volta": 68.5, "lento": 7.4, "mese": "Set"}, {"nps": 9.45, "cucina": 4.7, "servizio": 4.84, "n": 116, "google": 4.84, "tornerebbe": 100.0, "ritmo_giusto": 92.2, "prima_volta": 72.4, "lento": 6.0, "mese": "Ott"}, {"nps": 9.26, "cucina": 4.71, "servizio": 4.82, "n": 140, "google": 4.67, "tornerebbe": 97.9, "ritmo_giusto": 92.9, "prima_volta": 74.3, "lento": 5.0, "mese": "Nov"}, {"nps": 9.56, "cucina": 4.79, "servizio": 4.84, "n": 95, "google": 4.79, "tornerebbe": 100.0, "ritmo_giusto": 93.7, "prima_volta": 61.1, "lento": 6.3, "mese": "Dic"}], "trend26": [{"nps": 9.62, "cucina": 4.84, "servizio": 4.93, "n": 86, "google": 4.83, "tornerebbe": 100.0, "ritmo_giusto": 98.8, "prima_volta": 65.1, "lento": 0.0, "mese": "Gen"}, {"nps": 9.49, "cucina": 4.8, "servizio": 4.9, "n": 41, "google": 4.58, "tornerebbe": 100.0, "ritmo_giusto": 95.1, "prima_volta": 65.9, "lento": 2.4, "mese": "Feb"}, {"nps": 9.28, "cucina": 4.81, "servizio": 4.93, "n": 68, "google": 4.72, "tornerebbe": 100.0, "ritmo_giusto": 92.6, "prima_volta": 54.4, "lento": 2.9, "mese": "Mar"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Apr"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Mag"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Giu"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Lug"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Ago"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Set"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Ott"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Nov"}, {"nps": 0, "cucina": 0, "servizio": 0, "n": 0, "google": 0, "tornerebbe": 0, "ritmo_giusto": 0, "prima_volta": 0, "lento": 0, "mese": "Dic"}], "sale": [{"sala": "Terrazza", "coperti": 303, "risposte": 96, "nps": 9.43, "cucina": 4.81, "servizio": 4.97}, {"sala": "Veranda", "coperti": 226, "risposte": 55, "nps": 9.47, "cucina": 4.78, "servizio": 4.91}, {"sala": "Piano Terra", "coperti": 132, "risposte": 35, "nps": 9.57, "cucina": 4.89, "servizio": 4.8}, {"sala": "Sartoria", "coperti": 44, "risposte": 9, "nps": 9.56, "cucina": 4.89, "servizio": 5.0}], "canali": [{"canale": "passaparola", "n": 38}, {"canale": "google", "n": 24}, {"canale": "già cliente", "n": 23}, {"canale": "tripadvisor", "n": 6}, {"canale": "instagram", "n": 7}, {"canale": "facebook", "n": 2}, {"canale": "passaggio", "n": 8}, {"canale": "AI / Chat GPT", "n": 1}], "fidelizzazione": [{"tipo": "Prima Volta", "n": 64}, {"tipo": "Abituali (3-9x)", "n": 39}, {"tipo": "Fedelissimi (10+)", "n": 6}], "dist_nps": [{"score": 10, "n": 62}, {"score": 9, "n": 28}, {"score": 8, "n": 15}, {"score": 7, "n": 4}, {"score": 6, "n": 0}, {"score": 5, "n": 0}, {"score": 4, "n": 0}, {"score": 3, "n": 0}, {"score": 2, "n": 0}, {"score": 1, "n": 0}], "google_avg": 4.5, "anomalies": {"Gen": [{"voce": "acquisti_op", "eff": -4183.0, "avg": -2970.0, "dev": -40.8}, {"voce": "immondizia", "eff": 0.0, "avg": -390.0, "dev": 100.0}, {"voce": "manutenzioni", "eff": -957.0, "avg": -2281.0, "dev": 58.1}, {"voce": "servizi", "eff": -1444.0, "avg": -639.0, "dev": -126.0}, {"voce": "software", "eff": -317.0, "avg": -964.0, "dev": 67.1}, {"voce": "costi_bancari", "eff": -199.0, "avg": -148.0, "dev": -34.4}, {"voce": "consulenze", "eff": -958.0, "avg": -4423.0, "dev": 78.3}, {"voce": "advertising", "eff": -146.0, "avg": -708.0, "dev": 79.4}, {"voce": "assicurazione", "eff": -55.0, "avg": -876.0, "dev": 93.7}], "Feb": [{"voce": "acquisti_op", "eff": -1933.0, "avg": -2970.0, "dev": 34.9}, {"voce": "immondizia", "eff": 0.0, "avg": -390.0, "dev": 100.0}, {"voce": "servizi", "eff": -194.0, "avg": -639.0, "dev": 69.7}, {"voce": "software", "eff": -317.0, "avg": -964.0, "dev": 67.1}, {"voce": "costi_bancari", "eff": -54.0, "avg": -148.0, "dev": 63.5}, {"voce": "consulenze", "eff": -858.0, "avg": -4423.0, "dev": 80.6}, {"voce": "advertising", "eff": -146.0, "avg": -708.0, "dev": 79.4}, {"voce": "assicurazione", "eff": -55.0, "avg": -876.0, "dev": 93.7}]}};
+
+// ═══════════════════════════════════════════════════════════════
+// EDITORIAL PALETTE — warm, magazine-grade
+// ═══════════════════════════════════════════════════════════════
+const C = {
+  bg:'#FAF8F5', card:'#FFFFFF', cardAlt:'#FFF8F0',
+  border:'#E8E0D8', gridLine:'#EDE6DD', shadow:'0 1px 3px rgba(139,125,107,0.08), 0 4px 12px rgba(139,125,107,0.04)',
+  text:'#2C2419', textSub:'#5C4F3D', muted:'#8B7D6B', faint:'#B0A494',
+  deep:'#C85A3A', warm:'#D4714A', amber:'#E8985A', golden:'#F0B060', sand:'#F5D090', cream:'#FAE8C0',
+  pos:'#27AE60', neg:'#C0392B', warn:'#E67E22',
+  dataMuted:'#D5CBBD',
+  pie:['#C85A3A','#D4714A','#E8985A','#F0B060','#8B7D6B','#5C4F3D','#B0A494','#D5CBBD'],
+};
+const AREA_COLORS = {Cucina:'#C85A3A',Sala:'#D4714A',Management:'#E8985A',Mgmt:'#E8985A',Amministrazione:'#F0B060',Amm:'#F0B060'};
+const fontD = "Georgia, Charter, 'Palatino Linotype', serif";
+const fontB = "-apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif";
+
+const fmt = (v,d=0) => v==null?'\u2013':Number(v).toLocaleString('it-IT',{maximumFractionDigits:d,minimumFractionDigits:d});
+const fmtK = v => v==null?'\u2013':Math.abs(v)>=1000?(v/1000).toLocaleString('it-IT',{maximumFractionDigits:1})+'K':fmt(v,0);
+const fmtEur = v => '\u20AC'+fmtK(v);
+const fmtP = v => v!=null&&!isNaN(v)?fmt(v,1)+'%':'\u2013';
+
+const card = {background:C.card,borderRadius:10,padding:'24px',boxShadow:C.shadow,border:`1px solid ${C.border}`};
+
+function KpiCard({label,value,sub,delta,good}) {
+  return (
+    <div style={card}>
+      <div style={{fontSize:11,color:C.muted,textTransform:'uppercase',letterSpacing:0.8,marginBottom:6,fontFamily:fontB}}>{label}</div>
+      <div style={{fontSize:28,fontWeight:700,color:C.text,marginBottom:6,fontFamily:fontD,letterSpacing:-0.5}}>{value}</div>
+      <div style={{display:'flex',alignItems:'center',gap:8,flexWrap:'wrap'}}>
+        {delta && <span style={{display:'inline-flex',alignItems:'center',gap:3,padding:'3px 10px',borderRadius:14,fontSize:11,fontWeight:600,
+          background:good?'rgba(39,174,96,0.1)':'rgba(192,57,43,0.1)',color:good?C.pos:C.neg,fontFamily:fontB}}>
+          {good?'\u25B2':'\u25BC'} {delta}
+        </span>}
+        {sub && <span style={{fontSize:12,color:C.faint,fontFamily:fontB}}>{sub}</span>}
+      </div>
+    </div>
+  );
+}
+
+function Section({children,icon}) {
+  return (
+    <div style={{display:'flex',alignItems:'center',gap:10,margin:'40px 0 20px',paddingBottom:10,borderBottom:`2px solid ${C.border}`}}>
+      {icon && <span style={{fontSize:22}}>{icon}</span>}
+      <h2 style={{fontSize:20,fontWeight:700,color:C.text,margin:0,fontFamily:fontD,letterSpacing:-0.3}}>{children}</h2>
+    </div>
+  );
+}
+
+function ChartCard({title,insight,children,wide,height}) {
+  return (
+    <div style={{...card,gridColumn:wide?'1/-1':undefined}}>
+      <h3 style={{fontSize:16,fontWeight:600,color:C.text,margin:0,fontFamily:fontB}}>{title}</h3>
+      {insight && <p style={{fontSize:13,color:C.muted,margin:'4px 0 0',fontFamily:fontB}}>{insight}</p>}
+      <div style={{height:height||300,marginTop:16}}>{children}</div>
+    </div>
+  );
+}
+
+function ProgressBar({label,current,target,unit,inverse}) {
+  const pct = Math.min((current/target)*100,150);
+  const good = inverse ? current<=target : current>=target;
+  const pp = Math.min(pct,100);
+  const barCol = good ? C.pos : pct>80 ? C.warn : C.neg;
+  return (
+    <div style={{...card,padding:'18px 22px'}}>
+      <div style={{display:'flex',justifyContent:'space-between',alignItems:'baseline',marginBottom:10}}>
+        <span style={{fontSize:13,fontWeight:600,color:C.text,fontFamily:fontB}}>{label}</span>
+        <span style={{fontSize:13,color:C.muted,fontFamily:fontB}}>
+          {unit==='\u20AC'?fmtEur(current):fmt(current,1)+'%'} / {unit==='\u20AC'?fmtEur(target):fmt(target,1)+'%'}
+        </span>
+      </div>
+      <div style={{background:C.gridLine,borderRadius:6,height:6,overflow:'hidden'}}>
+        <div style={{width:`${pp}%`,height:'100%',borderRadius:6,background:barCol,transition:'width 0.6s ease'}} />
+      </div>
+      <div style={{textAlign:'right',fontSize:11,color:C.muted,marginTop:6,fontFamily:fontB}}>
+        {fmt(pct,0)}% {inverse?(good?'\u2713 in target':'\u2717 sopra target'):(good?'\u2713 raggiunto':`manca ${fmt(100-pct,0)}%`)}
+      </div>
+    </div>
+  );
+}
+
+function CTip({active,payload,label,eurMode,pctMode}) {
+  if (!active||!payload?.length) return null;
+  return (
+    <div style={{background:'#fff',border:`1px solid ${C.border}`,borderRadius:10,padding:'12px 16px',boxShadow:'0 4px 16px rgba(44,36,25,0.12)',fontFamily:fontB}}>
+      <div style={{fontSize:13,fontWeight:600,color:C.text,marginBottom:6}}>{label}</div>
+      {payload.map((p,i)=>(
+        <div key={i} style={{fontSize:12,color:p.color||C.textSub,marginBottom:2}}>
+          {p.name}: {eurMode?fmtEur(p.value):pctMode?fmt(p.value,1)+'%':fmt(p.value,2)}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// MAIN DASHBOARD
+// ═══════════════════════════════════════════════════════════════
+function Dashboard() {
+  const [ratei,setRatei] = useState(false);
+  const [extraBil,setExtraBil] = useState(true);
+
+  if (!D) return <div style={{padding:60,textAlign:'center',color:C.muted,fontFamily:fontD,fontSize:18}}>Nessun dato caricato.</div>;
+
+  const {meta,targets:TGT,pl26,pl25,ratei_deltas,hr,budget_pers,chiamate,area_costs,trend25,trend26,sale,canali,fidelizzazione,dist_nps,google_avg,anomalies} = D;
+  const COMPLETE = meta.complete;
+  const MESI = ["Gen","Feb","Mar","Apr","Mag","Giu","Lug","Ago","Set","Ott","Nov","Dic"];
+  const MC = COMPLETE.length;
+  const lastMonth = COMPLETE[MC-1];
+
+  const data = useMemo(() => pl26.map(m => {
+    if (!COMPLETE.includes(m.mese)) return {...m,_on:false};
+    let d = {...m,_on:true};
+    if (!extraBil) {
+      d.ricavi -= d.ricavi_extra;
+      d.ebitda -= (d.ricavi_extra+d.stipendio_amm+d.fuori_busta+d.bonus_vendita);
+      d.personale -= (d.fuori_busta+d.bonus_vendita);
+      d.costi_fissi -= d.stipendio_amm;
+    }
+    if (ratei && ratei_deltas[m.mese]!=null) {
+      d.ebitda += ratei_deltas[m.mese];
+      d.costi_fissi -= ratei_deltas[m.mese];
+    }
+    if (ratei || !extraBil) {
+      if (d.ricavi>0) { d.pct_cogs=Math.abs(d.cogs)/d.ricavi*100; d.pct_personale=Math.abs(d.personale)/d.ricavi*100; d.pct_ebitda=d.ebitda/d.ricavi*100; }
+    }
+    if (d.ricavi>0 && d.cogs!==0) {
+      const mc=(d.ricavi+d.cogs)/d.ricavi;
+      if (mc>0) { d.break_even=(Math.abs(d.costi_fissi)+Math.abs(d.personale))/mc; d.surplus=d.ricavi-d.break_even; }
+    }
+    return d;
+  }),[ratei,extraBil,pl26,COMPLETE,ratei_deltas]);
+
+  const act = data.filter(d => d._on);
+
+  const data25 = useMemo(() => pl25.map(m => {
+    if (!extraBil) return {...m,ricavi:m.ricavi-m.ricavi_extra,ebitda:m.ebitda-(m.ricavi_extra+m.stipendio_amm+m.fuori_busta+m.bonus_vendita),personale:m.personale-(m.fuori_busta+m.bonus_vendita),costi_fissi:m.costi_fissi-m.stipendio_amm};
+    return m;
+  }),[pl25,extraBil]);
+
+  const ytd = useMemo(() => {
+    const r = act.reduce((a,m)=>({ric:a.ric+m.ricavi,ebi:a.ebi+m.ebitda,cog:a.cog+m.cogs,per:a.per+m.personale,bud:a.bud+m.budget_ricavi}),{ric:0,ebi:0,cog:0,per:0,bud:0});
+    const ric25 = data25.slice(0,MC).reduce((a,m)=>a+m.ricavi,0);
+    return {...r,ric25,ebiP:r.ric>0?r.ebi/r.ric*100:0,cogP:r.ric>0?Math.abs(r.cog)/r.ric*100:0,perP:r.ric>0?Math.abs(r.per)/r.ric*100:0};
+  },[act,data25,MC]);
+
+  const cd = useMemo(() => act.map(m => {
+    const m25 = data25.find(x=>x.mese===m.mese)||{};
+    return {
+      mese:m.mese,ricavi:Math.round(m.ricavi),ric25:Math.round(m25.ricavi||0),
+      budget:Math.round(m.budget_ricavi||0),ebitda:Math.round(m.ebitda),ebi25:Math.round(m25.ebitda||0),
+      cogP:Math.round(m.pct_cogs*10)/10,cogP25:Math.round((m25.pct_cogs||0)*10)/10,
+      perP:Math.round(m.pct_personale*10)/10,ebiP:Math.round(m.pct_ebitda*10)/10,
+      pers:Math.round(Math.abs(m.personale)),persBud:Math.round(budget_pers+(chiamate[m.mese]||0)),
+      vinoP:m.vino_pct,vinoP25:m25.vino_pct||0,
+      beBase:m.break_even>0?Math.round(Math.min(m.ricavi,m.break_even)):0,
+      beSurp:(m.surplus||0)>0?Math.round(m.surplus):0,
+      beDef:(m.surplus||0)<0?Math.round(Math.abs(m.surplus)):0,
+      surplus:Math.round(m.surplus||0),
+      mc_pct:m.ricavi>0?(m.ricavi+m.cogs)/m.ricavi*100:0,
+    };
+  }),[act,data25,budget_pers,chiamate]);
+
+  const vinoAvg = act.length>0?act.reduce((a,m)=>a+m.vino_pct,0)/act.length:0;
+
+  const surveyKPI = useMemo(() => {
+    const t26=trend26.filter(t=>t.n>0); const last=t26[t26.length-1]||{};
+    const npsAvg=t26.length>0?t26.reduce((a,t)=>a+t.nps,0)/t26.length:0;
+    const totalSurveys=t26.reduce((a,t)=>a+t.n,0);
+    return {nps:last.nps||0,cucina:last.cucina||0,servizio:last.servizio||0,google:google_avg,
+      npsAvg,totalSurveys,lastMese:last.mese||'\u2014',
+      tornerebbe:t26.length>0?t26.reduce((a,t)=>a+(t.tornerebbe||0),0)/t26.length:0,
+      prima_volta:t26.length>0?t26.reduce((a,t)=>a+(t.prima_volta||0),0)/t26.length:0,
+      ritmo_giusto:t26.length>0?t26.reduce((a,t)=>a+(t.ritmo_giusto||0),0)/t26.length:0,
+      lento:t26.length>0?t26.reduce((a,t)=>a+(t.lento||0),0)/t26.length:0,
+      lastGoogle:last.google||0};
+  },[trend26,google_avg]);
+
+  const revenueData = MESI.map((m,i)=>({mese:m,'2025':data25[i]?.ricavi||0,'Budget':pl26[i]?.budget_ricavi||0,'2026':i<MC?(cd[i]?.ricavi):null}));
+  const surveyTrend = useMemo(()=>trend26.filter(t=>t.n>0).map(t=>{const t25=trend25.find(x=>x.mese===t.mese)||{};return {mese:t.mese,nps:t.nps,nps25:t25.nps||null,cucina:t.cucina,servizio:t.servizio,n:t.n};}),[trend26,trend25]);
+  const marginsData = cd.map(d=>({mese:d.mese,'COGS %':d.cogP,'COGS 25':d.cogP25,'Personale %':d.perP,'EBITDA %':d.ebiP}));
+  const vinoData = MESI.map((m,i)=>({mese:m,'2025':data25[i]?.vino_pct||0,'2026':i<MC?(act.find(a=>a.mese===m)?.vino_pct||null):null,target:TGT.vino_pct}));
+  const googleData = MESI.map((m,i)=>{const t26=trend26.find(t=>t.mese===m);const t25=trend25.find(t=>t.mese===m);return {mese:m,'2026':t26&&t26.n>0?t26.google:null,'2025':t25?t25.google:null,target:TGT.google_reviews};});
+  const areaPieData = Object.entries(area_costs).map(([name,value])=>({name,value:Math.round(Math.abs(value))}));
+  const persData = cd.map(d=>({mese:d.mese,'Effettivo':d.pers,'Budget':d.persBud}));
+  const npsColors = {10:C.pos,9:C.golden,8:C.warn,7:C.neg};
+  const npsDistData = [...dist_nps].filter(d=>d.score>=1).sort((a,b)=>b.score-a.score).map(d=>({...d,fill:npsColors[d.score]||C.neg}));
+  const sortedCanali = [...canali].sort((a,b)=>b.n-a.n);
+
+  const ricDelta = ytd.bud>0?((ytd.ric/ytd.bud-1)*100):0;
+  const ricVs25 = ytd.ric25>0?((ytd.ric/ytd.ric25-1)*100):0;
+
+  return (
+    <div style={{background:C.bg,minHeight:'100vh',fontFamily:fontB,color:C.text}}>
+      <div style={{maxWidth:1400,margin:'0 auto',padding:'20px 24px'}}>
+
+        {/* HEADER */}
+        <div style={{background:'linear-gradient(135deg, #2C2419 0%, #3D3124 50%, #4A3C2E 100%)',color:'#FAF8F5',borderRadius:14,padding:'28px 36px',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:16,marginBottom:24,boxShadow:'0 4px 20px rgba(44,36,25,0.25)'}}>
+          <div>
+            <h1 style={{fontSize:28,fontWeight:700,margin:0,fontFamily:fontD,letterSpacing:-0.5}}>{`I B\u00F9gian\u00E8n`}</h1>
+            <p style={{fontSize:14,opacity:0.5,margin:'6px 0 0',fontFamily:fontB,letterSpacing:3,textTransform:'uppercase'}}>{`Cruscotto ${lastMonth?'Gen\u2013'+lastMonth:''} 2026`}</p>
+          </div>
+          <div style={{display:'flex',gap:20,alignItems:'center'}}>
+            <label style={{display:'flex',alignItems:'center',gap:8,fontSize:13,cursor:'pointer',opacity:0.85}}>
+              <input type="checkbox" checked={ratei} onChange={e=>setRatei(e.target.checked)} style={{accentColor:C.amber,width:16,height:16}} /> Ratei CF
+            </label>
+            <label style={{display:'flex',alignItems:'center',gap:8,fontSize:13,cursor:'pointer',opacity:0.85}}>
+              <input type="checkbox" checked={extraBil} onChange={e=>setExtraBil(e.target.checked)} style={{accentColor:C.amber,width:16,height:16}} /> Extra-bilancio
+            </label>
+          </div>
+        </div>
+
+        {/* KPI CARDS */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(220px, 1fr))',gap:16,marginBottom:24}}>
+          <KpiCard label="Ricavi YTD" value={fmtEur(ytd.ric)} good={ytd.ric>=ytd.bud} delta={`${ricDelta>=0?'+':''}${fmt(ricDelta,1)}% vs budget`} sub={`${ricVs25>=0?'+':''}${fmt(ricVs25,1)}% vs 2025`} />
+          <KpiCard label="EBITDA Margin" value={fmtP(ytd.ebiP)} good={ytd.ebiP>=TGT.ebitda_pct} delta={`target ${TGT.ebitda_pct}%`} sub={fmtEur(ytd.ebi)+' totale'} />
+          <KpiCard label="Vino % (media)" value={fmtP(vinoAvg)} good={vinoAvg>=TGT.vino_pct} delta={`target \u2265${TGT.vino_pct}%`} />
+          <KpiCard label="NPS Medio" value={fmt(surveyKPI.npsAvg,2)} good={surveyKPI.npsAvg>=9.0} delta="benchmark 9.0" sub={`${fmt(surveyKPI.totalSurveys,0)} sondaggi YTD`} />
+        </div>
+
+        {/* TARGETS */}
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(280px, 1fr))',gap:16,marginBottom:24}}>
+          <ProgressBar label="Fatturato 2026" current={ytd.ric} target={TGT.fatturato} unit={'\u20AC'} />
+          <ProgressBar label="EBITDA %" current={ytd.ebiP} target={TGT.ebitda_pct} unit="%" />
+          <ProgressBar label="COGS %" current={ytd.cogP} target={TGT.cogs_pct} unit="%" inverse />
+          <ProgressBar label="Vino %" current={vinoAvg} target={TGT.vino_pct} unit="%" />
+        </div>
+
+        {/* ═══ FINANCIAL ═══ */}
+        <Section icon={'\uD83D\uDCC8'}>Performance Finanziaria</Section>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
+          <ChartCard title={`Ricavi: ${ricDelta>=0?'+':''}${fmt(ricDelta,1)}% vs budget, ${ricVs25>=0?'+':''}${fmt(ricVs25,0)}% vs 2025`} insight="Barre colorate se sopra/sotto budget. Linee tratteggiate = 2025 e budget.">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={revenueData} margin={{top:10,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} tickFormatter={v=>fmtK(v)} axisLine={false} />
+                <Tooltip content={<CTip eurMode />} />
+                <Legend iconType="circle" wrapperStyle={{fontSize:11,color:C.muted}} />
+                <Line type="monotone" dataKey="2025" stroke={C.dataMuted} strokeWidth={2} dot={false} strokeDasharray="4 4" />
+                <Line type="monotone" dataKey="Budget" stroke={C.muted} strokeWidth={2} dot={false} strokeDasharray="6 3" />
+                <Bar dataKey="2026" radius={[6,6,0,0]} barSize={36}>
+                  {revenueData.map((d,i)=><Cell key={i} fill={d['2026']!=null?(d['2026']>=d['Budget']?C.pos:C.deep):'transparent'} />)}
+                  <LabelList dataKey="2026" position="top" formatter={v=>v?fmtK(v):''} style={{fontSize:10,fill:C.text,fontWeight:600}} />
+                </Bar>
+              </ComposedChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title={`Margini: Personale ${fmt(ytd.perP,1)}%, EBITDA ${fmt(ytd.ebiP,1)}%`} insight={`Target EBITDA \u2265${TGT.ebitda_pct}%. Verde = sopra target.`}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={marginsData} margin={{top:10,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} tickFormatter={v=>v+'%'} domain={[0,60]} axisLine={false} />
+                <Tooltip content={<CTip pctMode />} />
+                <Legend iconType="circle" wrapperStyle={{fontSize:11}} />
+                <ReferenceLine y={TGT.ebitda_pct} stroke={C.pos} strokeDasharray="4 4" label={{value:`EBITDA \u2265${TGT.ebitda_pct}%`,position:'right',fontSize:10,fill:C.pos}} />
+                <Bar dataKey="Personale %" fill={C.dataMuted} radius={[6,6,0,0]} barSize={32} fillOpacity={0.8}>
+                  <LabelList dataKey="Personale %" position="top" formatter={v=>fmt(v,0)+'%'} style={{fontSize:10,fill:C.muted}} />
+                </Bar>
+                <Bar dataKey="EBITDA %" radius={[6,6,0,0]} barSize={32}>
+                  {marginsData.map((d,i)=><Cell key={i} fill={d['EBITDA %']>=TGT.ebitda_pct?C.pos:C.warm} fillOpacity={0.85} />)}
+                  <LabelList dataKey="EBITDA %" position="top" formatter={v=>fmt(v,0)+'%'} style={{fontSize:10,fontWeight:600}} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
+          <ChartCard title={`COGS a ${fmt(ytd.cogP,1)}% \u2014 ${ytd.cogP<=TGT.cogs_pct?'in target':'sopra target '+TGT.cogs_pct+'%'}`} insight="Zona verde = sotto target. Linea 2025 per confronto storico.">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={marginsData} margin={{top:20,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} tickFormatter={v=>v+'%'} domain={[0,50]} axisLine={false} />
+                <Tooltip content={<CTip pctMode />} />
+                <Legend iconType="circle" wrapperStyle={{fontSize:11}} />
+                <ReferenceArea y1={0} y2={TGT.cogs_pct} fill={C.pos} fillOpacity={0.04} />
+                <ReferenceArea y1={TGT.cogs_pct} y2={50} fill={C.neg} fillOpacity={0.04} />
+                <ReferenceLine y={TGT.cogs_pct} stroke={C.neg} strokeWidth={2} strokeDasharray="6 3" label={{value:`\u2264${TGT.cogs_pct}%`,position:'insideTopRight',fontSize:11,fill:C.neg,fontWeight:600}} />
+                <Bar dataKey="COGS %" radius={[6,6,0,0]} barSize={40}>
+                  {marginsData.map((d,i)=><Cell key={i} fill={d['COGS %']<=TGT.cogs_pct?C.pos:C.deep} fillOpacity={0.85} />)}
+                  <LabelList dataKey="COGS %" position="top" formatter={v=>fmt(v,1)+'%'} style={{fontSize:11,fontWeight:600}} />
+                </Bar>
+                <Line type="monotone" dataKey="COGS 25" stroke={C.dataMuted} strokeWidth={2} dot={{r:4,fill:C.dataMuted}} name="COGS 2025" />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title={`EBITDA: ${ytd.ebi>=0?'+':''}${fmtEur(ytd.ebi)} YTD`} insight="Verde = positivo, terracotta = negativo. Grigio = 2025.">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={cd} margin={{top:20,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} tickFormatter={v=>fmtK(v)} axisLine={false} />
+                <Tooltip content={<CTip eurMode />} />
+                <Legend iconType="circle" wrapperStyle={{fontSize:11}} />
+                <ReferenceLine y={0} stroke={C.border} />
+                <Bar dataKey="ebi25" name="2025" fill={C.dataMuted} radius={[6,6,0,0]} barSize={28} fillOpacity={0.6} />
+                <Bar dataKey="ebitda" name="2026" radius={[6,6,0,0]} barSize={28}>
+                  {cd.map((d,i)=><Cell key={i} fill={d.ebitda>=0?C.pos:C.deep} />)}
+                  <LabelList dataKey="ebitda" position="top" formatter={v=>v!=null?fmtEur(v):''} style={{fontSize:10,fontWeight:600}} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        {/* Break-Even + Vino */}
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
+          <ChartCard title="Break-Even: dove siamo rispetto al pareggio" insight="Grigio = copertura BE. Verde = surplus, terracotta = deficit.">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={cd} margin={{top:20,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} tickFormatter={v=>fmtK(v)} domain={[0,'auto']} axisLine={false} />
+                <Tooltip content={({active,payload,label}) => {
+                  if (!active||!payload?.length) return null;
+                  const d = cd.find(x=>x.mese===label); if (!d) return null;
+                  return (<div style={{background:'#fff',border:`1px solid ${C.border}`,borderRadius:10,padding:'12px 16px',boxShadow:'0 4px 16px rgba(44,36,25,0.12)',fontFamily:fontB}}>
+                    <div style={{fontSize:13,fontWeight:600,marginBottom:6}}>{label}</div>
+                    <div style={{fontSize:12,color:C.amber}}>Ricavi: {fmtEur(d.ricavi)}</div>
+                    <div style={{fontSize:12,color:C.muted}}>Break-even: {fmtEur(d.beBase)}</div>
+                    <div style={{fontSize:12,color:C.warn}}>MC%: {fmt(d.mc_pct,1)}%</div>
+                    <div style={{fontSize:12,fontWeight:700,color:d.surplus>=0?C.pos:C.neg,marginTop:4}}>
+                      {d.surplus>=0?'+ ':'\u2013 '}{fmtEur(Math.abs(d.surplus))} {d.surplus>=0?'surplus':'deficit'}
+                    </div>
+                  </div>);
+                }} />
+                <Bar dataKey="beBase" name="Copertura BE" stackId="be" fill={C.dataMuted} barSize={48} />
+                <Bar dataKey="beSurp" name="Surplus" stackId="be" fill={C.pos} radius={[6,6,0,0]} barSize={48}>
+                  <LabelList content={({x,y,width,index}) => {
+                    const d=cd[index]; if (!d||d.surplus===0) return null;
+                    return <text x={x+width/2} y={y-10} textAnchor="middle" fontSize={12} fontWeight={700} fill={d.surplus>=0?C.pos:C.neg}>{d.surplus>=0?'+':'\u2013'}{fmtEur(Math.abs(d.surplus))}</text>;
+                  }} />
+                </Bar>
+                <Bar dataKey="beDef" name="Deficit" stackId="be" fill={C.deep} radius={[6,6,0,0]} barSize={48} />
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title={`Vino a ${fmt(vinoAvg,1)}% \u2014 ${vinoAvg>=TGT.vino_pct?'sopra':'sotto'} target ${TGT.vino_pct}%`} insight="Barre 2026, linea 2025. Target tratteggiato verde.">
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={vinoData} margin={{top:10,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} tickFormatter={v=>v+'%'} domain={[0,30]} axisLine={false} />
+                <Tooltip content={<CTip pctMode />} />
+                <Legend iconType="circle" wrapperStyle={{fontSize:11}} />
+                <ReferenceLine y={TGT.vino_pct} stroke={C.pos} strokeDasharray="4 4" label={{value:`${TGT.vino_pct}%`,position:'right',fontSize:10,fill:C.pos}} />
+                <Bar dataKey="2026" radius={[6,6,0,0]} barSize={32}>
+                  {vinoData.map((d,i)=><Cell key={i} fill={d['2026']!=null?(d['2026']>=TGT.vino_pct?C.pos:C.warm):'transparent'} />)}
+                  <LabelList dataKey="2026" position="top" formatter={v=>v?fmt(v,1)+'%':''} style={{fontSize:10,fontWeight:600}} />
+                </Bar>
+                <Line type="monotone" dataKey="2025" stroke={C.dataMuted} strokeWidth={2.5} dot={{r:4,fill:C.dataMuted,stroke:'#fff',strokeWidth:2}} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        {/* ═══ PEOPLE ═══ */}
+        <Section icon={'\uD83D\uDC65'}>Costo del Personale</Section>
+        <div style={{display:'grid',gridTemplateColumns:'2fr 1fr',gap:16,marginBottom:16}}>
+          <ChartCard title={`Personale: ${cd.every(d=>d.pers<=d.persBud)?'in budget':'alcuni mesi sopra budget'}`} insight="Terracotta = sopra budget. Grigio = budget di riferimento.">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={persData} margin={{top:20,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} tickFormatter={v=>fmtK(v)} axisLine={false} />
+                <Tooltip content={<CTip eurMode />} />
+                <Legend iconType="circle" wrapperStyle={{fontSize:11}} />
+                <Bar dataKey="Effettivo" radius={[6,6,0,0]} barSize={36}>
+                  {persData.map((d,i)=><Cell key={i} fill={d['Effettivo']<=d['Budget']?C.pos:C.deep} />)}
+                  <LabelList dataKey="Effettivo" position="top" formatter={v=>fmtEur(v)} style={{fontSize:10,fontWeight:600}} />
+                </Bar>
+                <Bar dataKey="Budget" fill={C.dataMuted} radius={[6,6,0,0]} barSize={36} fillOpacity={0.4}>
+                  <LabelList dataKey="Budget" position="top" formatter={v=>fmtEur(v)} style={{fontSize:10,fill:C.faint}} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title="Distribuzione per Area" insight="Proporzione costi personale per area.">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={areaPieData} cx="50%" cy="50%" innerRadius={60} outerRadius={95} paddingAngle={3} dataKey="value"
+                  label={({name,percent})=>`${name} ${(percent*100).toFixed(0)}%`} labelLine={{stroke:C.muted,strokeWidth:1}}>
+                  {areaPieData.map((d,i)=><Cell key={i} fill={AREA_COLORS[d.name]||C.muted} />)}
+                </Pie>
+                <Tooltip formatter={v=>fmtEur(v)} />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        {/* ═══ QUALITY ═══ */}
+        <Section icon={'\u2B50'}>{`Qualit\u00E0 e Soddisfazione`}</Section>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(170px, 1fr))',gap:16,marginBottom:16}}>
+          <KpiCard label={`NPS (${surveyKPI.lastMese})`} value={fmt(surveyKPI.nps,2)} good={surveyKPI.nps>=9.0} delta={'\u2265 9.0'} sub={`Media YTD: ${fmt(surveyKPI.npsAvg,2)}`} />
+          <KpiCard label="Cucina" value={`${fmt(surveyKPI.cucina,2)}/5`} good={surveyKPI.cucina>=4.7} delta={'\u2265 4.7'} />
+          <KpiCard label="Servizio" value={`${fmt(surveyKPI.servizio,2)}/5`} good={surveyKPI.servizio>=4.7} delta={'\u2265 4.7'} />
+          <KpiCard label="Google Reviews" value={fmt(surveyKPI.lastGoogle,2)} good={surveyKPI.lastGoogle>=TGT.google_reviews} delta={`tgt \u2265${TGT.google_reviews}`} sub={`Media: ${fmt(surveyKPI.google,2)}`} />
+          <KpiCard label="Sondaggi YTD" value={fmt(surveyKPI.totalSurveys,0)} sub={`${surveyTrend.length} mesi con dati`} />
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(170px, 1fr))',gap:16,marginBottom:20}}>
+          <div style={{...card,background:C.cardAlt}}>
+            <div style={{fontSize:11,color:C.muted,textTransform:'uppercase',letterSpacing:0.8,marginBottom:10,fontFamily:fontB}}>Metriche Operative (media YTD)</div>
+            <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10,fontSize:13}}>
+              <div>Tornerebbe: <strong style={{color:surveyKPI.tornerebbe>=95?C.pos:C.warn}}>{fmt(surveyKPI.tornerebbe,0)}%</strong></div>
+              <div>Ritmo OK: <strong style={{color:surveyKPI.ritmo_giusto>=90?C.pos:C.warn}}>{fmt(surveyKPI.ritmo_giusto,0)}%</strong></div>
+              <div>Prima Volta: <strong>{fmt(surveyKPI.prima_volta,0)}%</strong></div>
+              <div>Serv. Lento: <strong style={{color:surveyKPI.lento<=5?C.pos:C.neg}}>{fmt(surveyKPI.lento,1)}%</strong></div>
+            </div>
+          </div>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:16}}>
+          <ChartCard title={`NPS & Voti: trend qualit\u00E0 nel tempo`} insight="NPS asse sinistro (7\u201310), voti cucina/servizio asse destro (3\u20135)." height={320}>
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={surveyTrend} margin={{top:5,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} />
+                <YAxis yAxisId="nps" domain={[7,10]} tick={{fontSize:10,fill:C.muted}} axisLine={false} />
+                <YAxis yAxisId="voti" orientation="right" domain={[3,5]} tick={{fontSize:10,fill:C.muted}} axisLine={false} />
+                <Tooltip content={<CTip />} />
+                <Legend wrapperStyle={{fontSize:11}} />
+                <Line yAxisId="nps" dataKey="nps" name="NPS 2026" stroke={C.deep} strokeWidth={2.5} dot={{r:5,fill:C.deep,stroke:'#fff',strokeWidth:2}} />
+                <Line yAxisId="nps" dataKey="nps25" name="NPS 2025" stroke={C.dataMuted} strokeDasharray="5 5" dot={false} />
+                <Line yAxisId="voti" dataKey="cucina" name="Cucina" stroke={C.amber} strokeWidth={2} dot={{r:4,fill:C.amber,stroke:'#fff',strokeWidth:2}} />
+                <Line yAxisId="voti" dataKey="servizio" name="Servizio" stroke={C.golden} strokeWidth={2} dot={{r:4,fill:C.golden,stroke:'#fff',strokeWidth:2}} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title={`Google Reviews: ${surveyKPI.lastGoogle>=TGT.google_reviews?'sopra':'sotto'} target ${TGT.google_reviews}`} insight="Barre 2026 vs linea 2025. Obiettivo tratteggiato verde." height={320}>
+            <ResponsiveContainer width="100%" height="100%">
+              <ComposedChart data={googleData} margin={{top:10,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="mese" tick={{fontSize:11,fill:C.muted}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} domain={[3.5,5.2]} tickFormatter={v=>fmt(v,1)} axisLine={false} />
+                <Tooltip content={<CTip />} />
+                <Legend iconType="circle" wrapperStyle={{fontSize:11}} />
+                <ReferenceLine y={TGT.google_reviews} stroke={C.pos} strokeDasharray="4 4" label={{value:`${TGT.google_reviews}`,position:'right',fontSize:10,fill:C.pos}} />
+                <Bar dataKey="2026" radius={[6,6,0,0]} barSize={32}>
+                  {googleData.map((d,i)=><Cell key={i} fill={d['2026']!=null?(d['2026']>=TGT.google_reviews?C.pos:C.warm):'transparent'} />)}
+                  <LabelList dataKey="2026" position="top" formatter={v=>v?fmt(v,2):''} style={{fontSize:10,fontWeight:600}} />
+                </Bar>
+                <Line type="monotone" dataKey="2025" stroke={C.dataMuted} strokeWidth={2.5} dot={{r:4,fill:C.dataMuted,stroke:'#fff',strokeWidth:2}} />
+              </ComposedChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr 1fr',gap:16,marginBottom:16}}>
+          <ChartCard title="Come ci trovano" insight="Canali acquisizione, per frequenza." height={280}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={sortedCanali} layout="vertical" margin={{top:5,right:40,bottom:5,left:80}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} horizontal={false} />
+                <XAxis type="number" tick={{fontSize:11,fill:C.muted}} axisLine={false} />
+                <YAxis type="category" dataKey="canale" tick={{fontSize:11,fill:C.textSub}} width={75} axisLine={false} />
+                <Tooltip />
+                <Bar dataKey="n" name="Risposte" radius={[0,6,6,0]} barSize={18}>
+                  {sortedCanali.map((d,i)=><Cell key={i} fill={C.pie[i%C.pie.length]} fillOpacity={0.8} />)}
+                  <LabelList dataKey="n" position="right" style={{fontSize:10,fill:C.text,fontWeight:600}} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title="Clienti di ritorno vs nuovi" insight="Distribuzione fidelizzazione." height={280}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie data={fidelizzazione} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={3} dataKey="n" nameKey="tipo"
+                  label={({tipo,percent})=>`${tipo} ${(percent*100).toFixed(0)}%`} labelLine={{stroke:C.muted}}>
+                  {fidelizzazione.map((d,i)=><Cell key={i} fill={C.pie[i]} />)}
+                </Pie>
+                <Tooltip />
+              </PieChart>
+            </ResponsiveContainer>
+          </ChartCard>
+
+          <ChartCard title="Distribuzione NPS" insight="Sopra 9 = promoter." height={280}>
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={npsDistData} margin={{top:20,right:20,bottom:5,left:10}}>
+                <CartesianGrid strokeDasharray="3 3" stroke={C.gridLine} />
+                <XAxis dataKey="score" tick={{fontSize:12,fill:C.textSub}} axisLine={{stroke:C.dataMuted}} />
+                <YAxis tick={{fontSize:11,fill:C.muted}} axisLine={false} />
+                <Tooltip />
+                <Bar dataKey="n" name="Risposte" radius={[6,6,0,0]}>
+                  {npsDistData.map((d,i)=><Cell key={i} fill={d.fill} fillOpacity={0.85} />)}
+                  <LabelList dataKey="n" position="top" style={{fontSize:10,fontWeight:600,fill:C.text}} />
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
+          </ChartCard>
+        </div>
+
+        {/* ── Performance per Sala ── */}
+        {sale.length>0 && (
+          <div style={{...card,marginBottom:16}}>
+            <h3 style={{fontSize:16,fontWeight:600,margin:'0 0 4px',fontFamily:fontB}}>Performance per Sala (YTD 2026)</h3>
+            <p style={{fontSize:13,color:C.muted,margin:'0 0 16px',fontFamily:fontB}}>Dati aggregati da inizio anno. NPS, Cucina e Servizio sono medie ponderate.</p>
+            <table style={{width:'100%',borderCollapse:'collapse',fontSize:13,fontFamily:fontB}}>
+              <thead><tr style={{borderBottom:`2px solid ${C.border}`}}>
+                {['Sala','Coperti','Risposte','NPS','Cucina','Servizio'].map(h=>
+                  <th key={h} style={{textAlign:h==='Sala'?'left':'right',padding:'10px 12px',color:C.muted,fontWeight:600,fontSize:11,textTransform:'uppercase',letterSpacing:0.5}}>{h}</th>
+                )}
+              </tr></thead>
+              <tbody>
+                {sale.map((s,i)=>(
+                  <tr key={i} style={{borderBottom:`1px solid ${C.gridLine}`}}>
+                    <td style={{padding:'10px 12px',fontWeight:600}}>{s.sala}</td>
+                    <td style={{padding:'10px 12px',textAlign:'right'}}>{s.coperti}</td>
+                    <td style={{padding:'10px 12px',textAlign:'right',color:C.muted}}>{s.risposte||'\u2013'}</td>
+                    <td style={{padding:'10px 12px',textAlign:'right'}}><strong style={{color:s.nps>=9.3?C.pos:s.nps>=9.0?C.amber:C.neg}}>{fmt(s.nps,2)}</strong></td>
+                    <td style={{padding:'10px 12px',textAlign:'right'}}><strong style={{color:(s.cucina||0)>=4.8?C.pos:(s.cucina||0)>=4.5?C.amber:C.warn}}>{fmt(s.cucina,2)}</strong></td>
+                    <td style={{padding:'10px 12px',textAlign:'right'}}><strong style={{color:(s.servizio||0)>=4.8?C.pos:(s.servizio||0)>=4.5?C.amber:C.warn}}>{fmt(s.servizio,2)}</strong></td>
+                  </tr>
+                ))}
+                <tr style={{borderTop:`2px solid ${C.text}`,fontWeight:700}}>
+                  <td style={{padding:'10px 12px'}}>Totale</td>
+                  <td style={{padding:'10px 12px',textAlign:'right'}}>{sale.reduce((a,s)=>a+s.coperti,0)}</td>
+                  <td style={{padding:'10px 12px',textAlign:'right',color:C.muted}}>{sale.reduce((a,s)=>a+(s.risposte||0),0)}</td>
+                  <td colSpan={3} />
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div style={{textAlign:'center',padding:'24px 0',color:C.faint,fontSize:11,borderTop:`1px solid ${C.border}`,marginTop:24,fontFamily:fontB}}>
+          <p style={{margin:0}}>{`I B\u00F9gian\u00E8n \u2014 Gen\u2013${lastMonth} 2026 \u00B7 ${meta.generated?.split('T')[0]||''}`}</p>
+          <p style={{margin:'4px 0 0',color:C.dataMuted}}>{`Toggle ratei: media mensile 2025 \u00B7 Toggle extra-bilancio: RNB + stip. amm. + fuori busta + bonus vendita`}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Dashboard));
+
+</script>
+</body>
+</html>
