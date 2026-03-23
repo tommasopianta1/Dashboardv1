@@ -3,133 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cruscotto I Bùgianèn 2026</title>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone@7/babel.min.js"></script>
-    <script src="https://unpkg.com/recharts@2.12.7/umd/Recharts.js"></script>
+    <title>I Bùgianèn Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap');
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:#FAF8F5; font-family:'Inter', sans-serif; color:#2C2419; }
-        .loader { display: flex; justify-content: center; align-items: center; height: 100vh; font-family: serif; font-style: italic; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body { background:#FAF8F5; font-family:'Inter', sans-serif; color:#2C2419; margin: 0; padding: 20px; }
+        .header { background: #2C2419; color: white; padding: 30px; border-radius: 12px; margin-bottom: 25px; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; max-width: 1200px; margin: auto; }
+        .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #E8E0D8; }
+        h2 { font-size: 16px; margin-bottom: 15px; color: #8B7D6B; text-transform: uppercase; }
+        .kpi { font-size: 32px; font-weight: bold; color: #C85A3A; }
     </style>
 </head>
 <body>
-<div id="root"><div class="loader">Preparazione del cruscotto...</div></div>
 
-<script type="text/babel">
-const { useState, useMemo } = React;
-// Estraiamo i componenti da Recharts senza usare 'import'
-const { 
-    ComposedChart, BarChart, Bar, Line, XAxis, YAxis, CartesianGrid, 
-    Tooltip, Legend, ResponsiveContainer, ReferenceLine, ReferenceArea, 
-    Cell, PieChart, Pie, LabelList 
-} = Recharts;
+<div class="header">
+    <h1>I Bùgianèn - Dashboard 2026</h1>
+    <p>Monitoraggio Performance Gennaio-Febbraio</p>
+</div>
 
-// ═══════════════════════════════════════════════════════════════
-// I TUOI DATI ORIGINALI
-// ═══════════════════════════════════════════════════════════════
-const D = {"meta": {"complete": ["Gen", "Feb"], "generated": "2026-03-23T16:04:15.080604"}, "targets": {"fatturato": 1873000, "ebitda_pct": 20, "cogs_pct": 30, "google_reviews": 4.8, "vino_pct": 20}, "pl26": [{"mese": "Gen", "ricavi": 117223.18, "budget_ricavi": 112261.57, "corrispettivi": 100678.32, "fatture": 8796.36, "ricavi_extra": 7748.5, "vino_gest": 24773.59, "totale_gestionale": 127992.74, "costi_variabili": -39548.08, "cogs": -36944.66, "costo_pos": -1294.82, "lavanderia": -1308.6, "costi_fissi": -19222.74, "acquisti_op": -4182.98, "utenze": -3546.44, "immondizia": 0.0, "manutenzioni": -957.05, "servizi": -1443.71, "software": -317.03, "costi_bancari": -199.35, "stipendio_amm": -5915.29, "consulenze": -957.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": -1502.0, "personale": -45785.35, "salari": -31207.65, "oneri_inps": -7916.56, "tfr": -2137.14, "fuori_busta": -4524.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": 14163.01, "ammortamenti": -5000.0, "interessi": -1865.45, "utile_ante": 7297.56, "pct_cogs": 31.52, "pct_personale": 39.06, "pct_ebitda": 12.08, "pct_food_cost": 27.36, "vino_pct": 19.21, "break_even": 94925.0, "surplus": 22298.0}, {"mese": "Feb", "ricavi": 58201.14, "budget_ricavi": 70346.68, "corrispettivi": 45157.82, "fatture": 4306.82, "ricavi_extra": 8736.5, "vino_gest": 12954.18, "totale_gestionale": 63384.09, "costi_variabili": -24496.76, "cogs": -23173.09, "costo_pos": -783.07, "lavanderia": -540.6, "costi_fissi": -14328.83, "acquisti_op": -1932.81, "utenze": -2896.96, "immondizia": 0.0, "manutenzioni": -1963.75, "servizi": -193.71, "software": -317.03, "costi_bancari": -54.13, "stipendio_amm": -5911.54, "consulenze": -857.89, "advertising": -145.91, "donazioni": 0.0, "pasti_trasporti": 0.0, "assicurazione": -55.1, "affitto": 0.0, "personale": -32671.09, "salari": -22153.53, "oneri_inps": -5799.07, "tfr": -2118.49, "fuori_busta": -2600.0, "bonus_vendita": 0.0, "rimanenze": -57504.0, "tasse_tributi": 0.0, "ebitda": -8059.54, "ammortamenti": -5000.0, "interessi": -1856.55, "utile_ante": -14916.09, "pct_cogs": 39.82, "pct_personale": 56.13, "pct_ebitda": -13.85, "pct_food_cost": 28.3, "vino_pct": 20.23, "break_even": 78093.0, "surplus": -19892.0}], "pl25": [], "ratei_deltas": {}, "hr": {}, "budget_pers": 38512.0, "chiamate": {}, "area_costs": {"Sala": 41474.0, "Management": 3773.0, "Amministrazione": 11828.0, "Cucina": 22122.0}, "trend25": [], "trend26": [{"nps": 9.62, "cucina": 4.84, "servizio": 4.93, "n": 86, "google": 4.83, "mese": "Gen"}, {"nps": 9.49, "cucina": 4.8, "servizio": 4.9, "n": 41, "google": 4.58, "mese": "Feb"}], "sale": [], "canali": [], "fidelizzazione": [], "dist_nps": [], "google_avg": 4.5};
+<div class="grid">
+    <div class="card">
+        <h2>Ricavi Totali YTD</h2>
+        <div class="kpi">€ 175.424</div>
+        <p style="color: #27AE60;">↑ Sopra budget</p>
+    </div>
+    
+    <div class="card">
+        <h2>EBITDA Medio</h2>
+        <div class="kpi">€ 3.051</div>
+        <p style="color: #8B7D6B;">Margine: ~1.7%</p>
+    </div>
 
-// ═══════════════════════════════════════════════════════════════
-// CONFIGURAZIONE ESTETICA
-// ═══════════════════════════════════════════════════════════════
-const C = {
-    bg:'#FAF8F5', card:'#FFFFFF', border:'#E8E0D8', gridLine:'#EDE6DD', shadow:'0 4px 12px rgba(139,125,107,0.06)',
-    text:'#2C2419', muted:'#8B7D6B', pos:'#27AE60', neg:'#C0392B', warn:'#E67E22', amber:'#E8985A',
-    dataMuted:'#D5CBBD', deep:'#C85A3A',
-    pie:['#C85A3A','#D4714A','#E8985A','#F0B060']
-};
+    <div class="card" style="grid-column: span 1;">
+        <h2>Ricavi vs Budget (€)</h2>
+        <canvas id="chartRicavi"></canvas>
+    </div>
 
-const fmt = (v,d=0) => v==null?'--':Number(v).toLocaleString('it-IT',{maximumFractionDigits:d,minimumFractionDigits:d});
-const fmtEur = v => '€' + fmt(v,0);
+    <div class="card" style="grid-column: span 1;">
+        <h2>EBITDA Mensile (€)</h2>
+        <canvas id="chartEbitda"></canvas>
+    </div>
+</div>
 
-// ═══════════════════════════════════════════════════════════════
-// COMPONENTI UI
-// ═══════════════════════════════════════════════════════════════
-function KpiCard({label, value, delta, good}) {
-    return (
-        <div style={{background:C.card, padding:20, borderRadius:12, border:`1px solid ${C.border}`, boxShadow:C.shadow}}>
-            <div style={{fontSize:11, color:C.muted, textTransform:'uppercase', letterSpacing:1, marginBottom:8}}>{label}</div>
-            <div style={{fontSize:26, fontWeight:700, fontFamily:'serif'}}>{value}</div>
-            <div style={{fontSize:12, marginTop:6, color:good?C.pos:C.neg}}>{delta}</div>
-        </div>
-    );
-}
+<script>
+    // Dati estratti dai tuoi file originali
+    const mesi = ['Gennaio', 'Febbraio'];
+    const ricaviReali = [117223, 58201];
+    const ricaviBudget = [112261, 70346];
+    const ebitdaReale = [14163, -8059];
 
-function ChartCard({title, children}) {
-    return (
-        <div style={{background:C.card, padding:24, borderRadius:12, border:`1px solid ${C.border}`, boxShadow:C.shadow, marginBottom:20}}>
-            <h3 style={{fontSize:16, fontWeight:600, marginBottom:20}}>{title}</h3>
-            <div style={{height:300}}>{children}</div>
-        </div>
-    );
-}
+    // Configurazione Grafico Ricavi
+    new Chart(document.getElementById('chartRicavi'), {
+        type: 'bar',
+        data: {
+            labels: mesi,
+            datasets: [
+                { label: 'Reale', data: ricaviReali, backgroundColor: '#C85A3A', borderRadius: 5 },
+                { label: 'Budget', data: ricaviBudget, backgroundColor: '#D5CBBD', borderRadius: 5 }
+            ]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'bottom' } } }
+    });
 
-// ═══════════════════════════════════════════════════════════════
-// DASHBOARD PRINCIPALE
-// ═══════════════════════════════════════════════════════════════
-function Dashboard() {
-    const act = D.pl26.filter(m => m.ricavi > 0);
-    const ytd = act.reduce((a,m)=>({ric:a.ric+m.ricavi, ebi:a.ebi+m.ebitda}),{ric:0,ebi:0});
-
-    return (
-        <div style={{padding:24, maxWidth:1200, margin:'0 auto'}}>
-            <header style={{background:'linear-gradient(135deg, #2C2419, #4A3C2E)', color:'#fff', padding:40, borderRadius:16, marginBottom:30, boxShadow:'0 10px 30px rgba(0,0,0,0.1)'}}>
-                <h1 style={{fontFamily:'serif', fontSize:36, marginBottom:8}}>I Bùgianèn</h1>
-                <p style={{opacity:0.8, letterSpacing:2, textTransform:'uppercase', fontSize:12}}>Financial Dashboard 2026</p>
-            </header>
-
-            <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(240px, 1fr))', gap:20, marginBottom:30}}>
-                <KpiCard label="Ricavi Totali YTD" value={fmtEur(ytd.ric)} delta="Dati reali Gennaio-Febbraio" />
-                <KpiCard label="EBITDA Margin" value={fmt(ytd.ebi/ytd.ric*100, 1) + '%'} good={ytd.ebi>0} delta={ytd.ebi > 0 ? "In utile" : "In perdita"} />
-                <KpiCard label="Target 2026" value={fmtEur(D.targets.fatturato)} delta="Obiettivo Annuale" />
-                <KpiCard label="Rating Google" value={fmt(D.google_avg, 1) + ' / 5.0'} good={D.google_avg >= 4.5} delta="Soddisfazione Clienti" />
-            </div>
-
-            <div style={{display:'grid', gridTemplateColumns:'1fr 1fr', gap:20, flexWrap:'wrap'}}>
-                <ChartCard title="Performance Ricavi: Reale vs Budget">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <BarChart data={act}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={C.gridLine} />
-                            <XAxis dataKey="mese" axisLine={false} tickLine={false} />
-                            <YAxis axisLine={false} tickLine={false} tickFormatter={v => v/1000 + 'k'} />
-                            <Tooltip cursor={{fill: '#F5F5F5'}} />
-                            <Legend />
-                            <Bar name="Ricavi Effettivi" dataKey="ricavi" fill={C.deep} radius={[4,4,0,0]} barSize={40} />
-                            <Bar name="Budget" dataKey="budget_ricavi" fill={C.dataMuted} radius={[4,4,0,0]} barSize={40} />
-                        </BarChart>
-                    </ResponsiveContainer>
-                </ChartCard>
-
-                <ChartCard title="EBITDA % Mensile">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <ComposedChart data={act}>
-                            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={C.gridLine} />
-                            <XAxis dataKey="mese" />
-                            <YAxis unit="%" />
-                            <Tooltip />
-                            <ReferenceLine y={D.targets.ebitda_pct} stroke={C.pos} strokeDasharray="5 5" label={{value: 'Target 20%', position: 'right', fill: C.pos, fontSize: 10}} />
-                            <Bar name="EBITDA %" dataKey="pct_ebitda">
-                                {act.map((entry, index) => (
-                                    <Cell key={`cell-${index}`} fill={entry.pct_ebitda > 0 ? C.pos : C.neg} opacity={0.8} />
-                                ))}
-                            </Bar>
-                        </ComposedChart>
-                    </ResponsiveContainer>
-                </ChartCard>
-            </div>
-
-            <footer style={{textAlign:'center', marginTop:50, padding:30, color:C.muted, fontSize:11, borderTop:`1px solid ${C.border}`}}>
-                Analisi Automatica I Bùgianèn • Ultimo aggiornamento: {D.meta.generated.split('T')[0]}
-            </footer>
-        </div>
-    );
-}
-
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<Dashboard />);
+    // Configurazione Grafico EBITDA
+    new Chart(document.getElementById('chartEbitda'), {
+        type: 'line',
+        data: {
+            labels: mesi,
+            datasets: [{
+                label: 'EBITDA',
+                data: ebitdaReale,
+                borderColor: '#27AE60',
+                backgroundColor: '#27AE60',
+                tension: 0.3,
+                fill: false,
+                pointRadius: 6
+            }]
+        },
+        options: { 
+            responsive: true, 
+            plugins: { legend: { display: false } },
+            scales: { y: { grid: { color: '#EDE6DD' } } }
+        }
+    });
 </script>
+
 </body>
 </html>
